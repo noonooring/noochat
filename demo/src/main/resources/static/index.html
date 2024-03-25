@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>누누대신 대답해주는 챗봇!</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        #chatbox {
+            border: 1px solid #ccc;
+            padding: 10px;
+            height: 300px;
+            overflow-y: scroll;
+        }
+        input[type="text"] {
+            width: calc(100% - 40px);
+            padding: 10px;
+            margin: 10px 0;
+        }
+        input[type="submit"] {
+            width: 100px;
+            padding: 10px;
+            margin-left: 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>누누에게 무러바(｡・//ε//・｡) </h1>
+    <div id="chatbox"></div>
+    <form id="chatForm">
+        <input type="text" id="message" placeholder="메시지를 입력하세요...">
+        <input type="submit" value="전송">
+    </form>
+</div>
+<script>
+    document.getElementById("chatForm").addEventListener("submit", function(event) {
+        event.preventDefault();
+        sendMessage();
+    });
+
+    function sendMessage() {
+        var message = document.getElementById("message").value;
+        addMessage("나", message);
+        fetch("/chat?message=" + encodeURIComponent(message))
+            .then(response => response.text())
+            .then(data => addMessage("누누", data))
+            .catch(error => console.error("에러:", error));
+        document.getElementById("message").value = "";
+    }
+
+    function addMessage(sender, message) {
+        var chatbox = document.getElementById("chatbox");
+        var messageElement = document.createElement("div");
+        messageElement.textContent = sender + ": " + message;
+        chatbox.appendChild(messageElement);
+    }
+</script>
+</body>
+</html>
